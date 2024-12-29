@@ -1,0 +1,65 @@
+### POST Request to create a category
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+X-User-Id: 12345 
+
+{
+  "name": "Drama",
+  "promoted": true
+}
+
+### POST Request to create a category
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+X-User-Id: 12346
+
+{
+  "name": "Drama",
+  "promoted": true
+}
+
+### GET Request to fetch all categories
+GET http://localhost:3000/api/categories
+X-User-Id: 12345
+
+### POST Request to create a category
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+X-User-Id: 12345
+
+{
+  "name": "Action",
+  "promoted": true
+}
+
+### PATCH Request to update a category by ID
+PATCH http://localhost:3000/api/categories/676fe602f4768ece69b87d63
+Content-Type: application/json
+X-User-Id: 12345
+
+{
+  "name": "Action & Adventure",
+  "promoted": true
+}
+
+
+### GET Request to fetch a category by ID
+GET http://localhost:3000/api/categories/676fe602f4768ece69b87d63
+X-User-Id: 12345
+
+### GET Request to incorrect category ID
+GET http://localhost:3000/api/categories/676fd82a8aa151542d45bc97
+X-User-Id: 12345
+
+### GET Request to incorrect user ID
+GET http://localhost:3000/api/categories/676fd82a8aa151542d45bc96
+X-User-Id: 12346
+
+
+### GET Request to incorrect category ID
+GET http://localhost:3000/api/categories/foo
+X-User-Id: 12345
+
+### DELETE Request to delete a category by ID
+DELETE http://localhost:3000/api/categories/676fe5eff4768ece69b87d5d
+X-User-Id: 12345
