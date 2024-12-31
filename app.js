@@ -24,6 +24,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const categories = require('./routes/category'); // Import the category routes.
+const users = require('./routes/user'); // Import the user routes.
 
 
 require('dotenv').config({ path: './config/.env.local' });
@@ -46,6 +47,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // app.use('/categories', categories); 
 // app.use('/articles', articles); 
 app.use('/api/categories', categories);
+app.use('/api/users', users);
 
 
 
