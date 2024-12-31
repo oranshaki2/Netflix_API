@@ -1,3 +1,5 @@
+#I use exstension "REST client"
+
 ### POST Request to create a category
 POST http://localhost:3000/api/categories
 Content-Type: application/json
@@ -5,7 +7,8 @@ X-User-Id: 12345
 
 {
   "name": "Drama",
-  "promoted": true
+  "promoted": true,
+  "movieIds": "101 102 103"
 }
 
 ### POST Request to create a category
@@ -15,12 +18,17 @@ X-User-Id: 12346
 
 {
   "name": "Drama",
-  "promoted": true
+  "promoted": false,
+  "movieIds": "104 101 105"
 }
 
 ### GET Request to fetch all categories
 GET http://localhost:3000/api/categories
 X-User-Id: 12345
+
+### GET Request to fetch all categories for non-admin user
+GET http://localhost:3000/api/categories
+
 
 ### POST Request to create a category
 POST http://localhost:3000/api/categories
@@ -29,22 +37,24 @@ X-User-Id: 12345
 
 {
   "name": "Action",
-  "promoted": true
+  "promoted": true,
+  "movieIds": "100"
 }
 
 ### PATCH Request to update a category by ID
-PATCH http://localhost:3000/api/categories/676fe602f4768ece69b87d63
+PATCH http://localhost:3000/api/categories/6773e417b04c345a8ff87c88
 Content-Type: application/json
 X-User-Id: 12345
 
 {
   "name": "Action & Adventure",
-  "promoted": true
+  "promoted": false,
+  "movieIds": "100 101 102 103"
 }
 
 
 ### GET Request to fetch a category by ID
-GET http://localhost:3000/api/categories/676fe602f4768ece69b87d63
+GET http://localhost:3000/api/categories/6773e1b9160f9deee8143eb2
 X-User-Id: 12345
 
 ### GET Request to incorrect category ID
@@ -61,5 +71,5 @@ GET http://localhost:3000/api/categories/foo
 X-User-Id: 12345
 
 ### DELETE Request to delete a category by ID
-DELETE http://localhost:3000/api/categories/676fe5eff4768ece69b87d5d
+DELETE http://localhost:3000/api/categories/6773e1a4160f9deee8143ea9
 X-User-Id: 12345

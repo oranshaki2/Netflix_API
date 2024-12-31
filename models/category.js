@@ -10,15 +10,15 @@ const Category = new Schema({
         unique: true
     },
     promoted: { // Indicates whether the category is promoted or not.
-        type: Boolean,
+        type: [String], 
         default: false, 
     },
-    // description: { // Optional description for the category.
-    //     type: String,
-    // },
     userIds: { 
         type: [String], 
         required: true
+     },
+     movieIds: {  // Array of movie IDs associated with the category.
+        type: [String], 
      },
     createdAt: { // Timestamp for when the category was created.
         type: Date, 
