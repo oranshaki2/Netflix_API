@@ -1,0 +1,11 @@
+# Use a lightweight Python image
+FROM python:3.9-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the client source code into the container
+COPY src/tcp/tcpClient.py /app/
+
+# Set the default command to run the Python client
+CMD ["python", "tcpClient.py"]

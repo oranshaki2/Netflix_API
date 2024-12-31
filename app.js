@@ -24,6 +24,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const categories = require('./routes/category'); // Import the category routes.
+const movies = require('./routes/movie'); // Import the movie routes.
+const tokens = require('./routes/token'); // Import the token routes.
 
 
 require('dotenv').config({ path: './config/.env.local' });
@@ -46,6 +48,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // app.use('/categories', categories); 
 // app.use('/articles', articles); 
 app.use('/api/categories', categories);
+app.use('/api/movies', movies);
+app.use('/api/tokens', tokens)
 
 
 

@@ -1,0 +1,48 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    entrypoint: ["./server"]
+  
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    entrypoint: ["python", "tcpClient.py"]
+    stdin_open: true  # Keep stdin open for interactive use
+    tty: true  # Allocate a TTY for interactive use
+    init: true
+
+# command to first create the images #
+#   docker-compose build 
+
+# command to run server and client #
+# docker-compose run --name ntfx-server server 8080
+# docker-compose run --name ntfx-client client ntfx-server 8080
+
+# command to run server and client in interactive mode #
+# docker-compose run --name [srv_name] server [srv_port]
+# docker-compose run --name ntfx-client client [srv_name] [srv_port]
+
+# command to run gtest #
+# docker-compose run gtest
+
+# command to restart server and client #
+# docker start [server_container_id]
+# docker start -i [client_container_id]
+
+# command to stop server and client #
+# docker stop [server_container_id]
+# docker stop [client_container_id]
+
+# command to remove server and client #
+# docker rm [server_container_id]
+# docker rm [client_container_id]
+
+# command to remove images #
+# docker rmi [server_image_id]
+# docker rmi [client_image_id]
+
+# command to remove all images #
+# docker rmi $(docker images -q)
