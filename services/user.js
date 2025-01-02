@@ -23,3 +23,5 @@ const getUserById = async (id) => {
 const getUserByUsername = async (username) => {
     return await User.findOne({ username });
 };
+
+module.exports = { createUser, getUserById, getUserByUsername };

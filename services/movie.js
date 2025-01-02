@@ -75,12 +75,12 @@ const createRecommendation = async (userId, movieId) => {
         );
         console.log(response.data); // Return the response from the server
         if (response.data.includes('200 Ok')){
-            // להוסיף את החלק של הוספה של הסרט לסרטים שהיוזר צפה בהם
+            const user = await User.findById(userId);
+            user.findByIdAndUpdate(userId, { $addToSet: { watch_list: movieId } });
         }
     } catch (error) {
         //console.error('Error sending data:', error.message);
     }
 };
 
-// module.exports = { createCategory, getCategories, getCategoryById, updateCategory, deleteCategory , getCategoryByName};
 module.exports = { getRecommendations, createRecommendation };
