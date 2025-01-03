@@ -1,0 +1,66 @@
+### POST Request to create a new movie
+POST http://localhost:3000/api/movies
+Content-Type: application/json
+X-User-Id: 12345
+
+{
+  "name": "Inception",
+  "categoryIds": "123 456"
+}
+
+### POST Request to create another new movie
+POST http://localhost:3000/api/movies
+Content-Type: application/json
+X-User-Id: 12345
+
+{
+  "name": "Interstellar",
+  "categoryIds": "123 789"
+}
+
+### POST Request to create a new movie
+POST http://localhost:3000/api/movies
+Content-Type: application/json
+X-User-Id: 12345
+
+{
+  "name": "Frozen",
+  "categoryIds": "123 456"
+}
+
+### GET Request to fetch all movies
+GET http://localhost:3000/api/movies
+X-User-Id: 12345
+
+### GET Request to fetch a specific movie by ID
+GET http://localhost:3000/api/movies/67780527088182814110c6bc
+X-User-Id: 12345
+
+### PUT Request to update a specific movie by ID
+PUT http://localhost:3000/api/movies/67780527088182814110c6bc
+Content-Type: application/json
+X-User-Id: 12345
+
+{
+  "categoryIds": "6773e40cb04c345a8ff87c82"
+}
+
+### DELETE Request to delete a specific movie by ID
+DELETE http://localhost:3000/api/movies/67780527088182814110c6bc
+X-User-Id: 12345
+
+### GET Request to search movies by query
+GET http://localhost:3000/api/movies/search/Frozen
+
+### GET Request to search movies by another query
+GET http://localhost:3000/api/movies/search/123
+
+### GET Request to search movies by query
+GET http://localhost:3000/api/movies/search/Inception
+
+### GET Request to search movies by another query
+GET http://localhost:3000/api/movies/search/In
+
+### GET Request to fetch movies by categories
+GET http://localhost:3000/api/movies
+X-User-Id: 12345

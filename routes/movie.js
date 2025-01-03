@@ -14,21 +14,25 @@ const movieController = require('../controllers/movie'); // Import the movie con
 //     next();  // Proceed to the next middleware or route handler
 // });
 
-// // Define the route for getting all categories and creating a new category.
-// router.route('/')
-//     .get(categoryController.getCategories) // Map GET /categories to getCategories.
-//     .post(categoryController.createCategory); // Map POST /categories to createCategory.
+// Define the route for getting all movies for user and creating a new movie.
+router.route('/')
+    .get(movieController.getMovies)  // Get movies by categories.
+    .post(movieController.createMovie); // Create a new movie.
 
-// // Define the route for specific category operations by ID.
-// router.route('/:id')
-//     .get(categoryController.getCategory) // Map GET /categories/:id to getCategory.
-//     .patch(categoryController.updateCategory) // Map PATCH /categories/:id to updateCategory.
-//     .delete(categoryController.deleteCategory); // Map DELETE /categories/:id to deleteCategory.
+// Define the route for specific movie operations by ID.
+router.route('/:id')
+    .get(movieController.getMovie) // Get a specific movie by ID.
+    .put(movieController.changeMovie) //change a specific movie by ID.
+    .delete(movieController.deleteMovie); // Delete a specific movie by ID.
 
 // Define the route for getting recommendations and creating a new recommendation.    
 router.route('/:id/recommend')
     .get(movieController.getRecommendations)
     .post(movieController.createRecommendation);
+
+// Define the route for searching movies by query.
+router.route('/search/:query')
+    .get(movieController.searchMovie);
 
 // Export the router to use it in the app.
 module.exports = router;
