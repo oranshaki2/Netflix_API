@@ -52,6 +52,14 @@ X-User-Id: 12345
   "movieIds": "100 101 102 103"
 }
 
+### PATCH Request to update a category by ID
+PATCH http://localhost:3000/api/categories/6773e40cb04c345a8ff87c82
+Content-Type: application/json
+X-User-Id: 12345
+
+{
+  "movieIds": "67780527088182814110c6bc"
+}
 
 ### GET Request to fetch a category by ID
 GET http://localhost:3000/api/categories/6773e1b9160f9deee8143eb2

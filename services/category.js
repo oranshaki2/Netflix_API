@@ -1,5 +1,5 @@
 
-
+const Movie = require('../models/movie');
 const Category = require('../models/category');
 
 // Create a new category and associate it with an array of user IDs (userIds is an array of strings)
@@ -85,7 +85,15 @@ const updateCategory = async (id, { name, promoted, movieIds, userId }) => {
 
 // Delete a category and ensure it belongs to the user (check if userId exists in the userIds array)
 const deleteCategory = async (id, userId) => {
-    return await Category.findOneAndDelete({ _id: id, userIds: userId }); 
+    const category = await Category.findByIdAndDelete(id);
+    if (category) {
+        // Remove the category ID from the associated movies
+        await Movie.updateMany(
+            { categoryIds: id },
+            { $pull: { categoryIds: id } }
+        );
+    }
+    return category;
 };
 
 module.exports = { createCategory, getCategories, getCategoryById, updateCategory, deleteCategory , getCategoryByName};

@@ -1,110 +1,70 @@
 const movieService = require('../services/movie');
 const mongoose = require('mongoose');
 
-// const createCategory = async (req, res) => {
-//     const { name, promoted } = req.body;
-//     // const userId = req.userId;  // Get userId from the request object
-//     const userId = req.headers['x-user-id'];
-//     // const userObjectId = new mongoose.Types.ObjectId(userId);
+// Create a new movie
+const createMovie = async (req, res) => {
+    const userId = req.headers['x-user-id'];
+    if (!userId) {
+        return res.status(400).json({ errors: ['User ID is required'] });
+    }
+    const { name, categoryIds } = req.body;
 
-//     const existingCategory = await categoryService.getCategoryByName(name); 
+    const movie = await movieService.createMovie(name, categoryIds);
+    res.status(201).send();
+};
 
-//     // if (existingCategory) {
-//     //     return res.status(201).json(existingCategory); exists
-//     // }
-//     if (existingCategory) {
-//         // // If the category exists, check if the user is already associated with it
-//         // if (existingCategory.users.includes(userId)) {
-//         //     return res.status(201).json(existingCategory); 
-//         // }
+// Get all movies
+const getMovies = async (req, res) => {
+    const userId = req.headers['x-user-id'];
+    if (!userId) {
+        return res.status(400).json({ errors: ['User ID is required'] });
+    }
+    try {
+        const moviesByCategories = await movieService.getMoviesByCategories(userId);
+        res.json(moviesByCategories);
+    } catch (error) {
+        res.status(400).json({ errors: [error.message] });
+    }
+};
 
-//         // If the user is not associated, add the userId to the category
-//         existingCategory.userIds.push(userId);  // Assuming you have a `users` field in the category model
+// Get a specific movie by ID
+const getMovie = async (req, res) => {
+    const movie = await movieService.getMovieById(req.params.id);
+    if (!movie) {
+        return res.status(404).json({ errors: ['Movie not found'] });
+    }
+    res.json(movie);
+};
 
-//         // Save the updated category
-//         await existingCategory.save();
+// Update a specific movie by ID
+const changeMovie = async (req, res) => {
+    const userId = req.headers['x-user-id'];
+    if (!userId) {
+        return res.status(400).json({ errors: ['User ID is required'] });
+    }
+    const { name, categoryIds } = req.body;
 
-//         return res.status(201).json(existingCategory);   // Return the updated category
-//     }
+    const updatedMovie = await movieService.updateMovie(req.params.id, { name, categoryIds });
+    if (!updatedMovie) {
+        return res.status(404).json({ errors: ['Movie not found'] });
+    }
 
-//     const category = await categoryService.createCategory(name, promoted, userId);  // Pass userId to the service
-//     res.status(201).json(category);
-// };
+    res.status(204).send();
+};
 
-// const getCategories = async (req, res) => {
-//     // const userId = req.userId;  // Get userId from the request object
-//     const userId = req.headers['x-user-id'];
-//     // try {
-//         const categories = await categoryService.getCategories(userId);  // Pass userId to the service
-//         res.json(categories);
-//     // } catch (error) {
-//     //     res.status(500).json({ errors: [error.message] });
-//     // }
-// };
+// Delete a specific movie by ID
+const deleteMovie = async (req, res) => {
+    const userId = req.headers['x-user-id'];
+    if (!userId) {
+        return res.status(400).json({ errors: ['User ID is required'] });
+    }
+    const movie = await movieService.deleteMovie(req.params.id);
+    if (!movie) {
+        return res.status(404).json({ errors: ['Movie not found'] });
+    }
 
-// const getCategory = async (req, res) => {
-//     // const userId = req.userId;  // Get userId from the request object
-//     const userId = req.headers['x-user-id'];
-//     try {
-//         const category = await categoryService.getCategoryById(req.params.id, userId);  // Pass userId to the service
-//         if (!category) {
-//             return res.status(404).json({ errors: ['Category not found'] });
-//         }
-//         res.json(category);
-//     } catch (error) {
-//         res.status(404).json({ errors: ['Category not found'] });
-//     }
-// };
-
-// const updateCategory = async (req, res) => {
-//     const { name, promoted } = req.body;
-//     // const userId = req.userId;  // Get userId from the request object
-//     const userId = req.headers['x-user-id'];
-
-//      // Fetch the category by ID and userId
-//      const category = await categoryService.getCategoryById(req.params.id, userId);
-
-//      // Check if the category exists and belongs to the user
-//      if (!category) {
-//          return res.status(404).json({ errors: ['Category not found or not associated with the user'] });
-//      }
-
-//      // Update the category with new data
-//      const updatedCategory = await categoryService.updateCategory(req.params.id, { name, promoted, userId });
- 
-
-//      res.status(204).send();
-
-//     // const existingCategory = await categoryService.getCategoryByName(name); 
-//     // if (!existingCategory) {
-//     //     return res.status(404).json({ errors: ['Category not found'] });
-//     // }
-//     // // try {
-//     //     const category = await categoryService.updateCategory(req.params.id, { name, promoted, userId });  // Pass userId to the service
-//     //     if (!existingCategory) {
-//     //         return res.status(404).json({ errors: ['Category not found'] });
-//     //     }
-//     //     await category.save();
-//     //     res.status(204).send();
-//     // } catch (error) {
-//     //     res.status(500).json({ errors: [error.message] });
-//     // }
-// };
-
-// const deleteCategory = async (req, res) => {
-//     // const userId = req.userId;  // Get userId from the request object
-//     const userId = req.headers['x-user-id'];
-//     // try {
-//         const category = await categoryService.deleteCategory(req.params.id, userId);  // Pass userId to the service
-//         if (!category) {
-//             return res.status(404).json({ errors: ['Category not found'] });
-//         }
-        
-//         res.status(204).send();
-//     // } catch (error) {
-//     //     res.status(500).json({ errors: [error.message] });
-//     // }
-// };
+    res.status(204).send();
+};
 
 const getRecommendations = async (req, res) => {
     const userId = req.headers['x-user-id'];
@@ -132,5 +92,17 @@ const createRecommendation = async (req, res) => {
 
 };
 
+// Search movies by query
+const searchMovie = async (req, res) => {
+    const query = req.params.query;
+
+    try {
+        const movies = await movieService.searchMovie(query);
+        res.json(movies);
+    } catch (error) {
+        res.status(400).json({ errors: [error.message] });
+    }
+};
+
 // module.exports = { createCategory, getCategories, getCategory, updateCategory, deleteCategory };
-module.exports = { getRecommendations, createRecommendation };
+module.exports = { createMovie, getMovies, getMovie, changeMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie };

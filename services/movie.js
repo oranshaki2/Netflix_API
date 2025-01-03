@@ -1,54 +1,62 @@
+const Category = require('../models/category');
 const Movie = require('../models/movie');
+const User = require('../models/user');
 const axios = require('axios');
 
-// // Create a new category and associate it with an array of user IDs (userIds is an array of strings)
-// const createCategory = async (name, promoted, userIds) => {
-//     const category = new Category({
-//         name,
-//         promoted,
-//         userIds  // userIds is an array of strings
-//     });
+// Create a new movie
+const createMovie = async (name, categoryIds) => {
+    const movie = new Movie({
+        name,
+        categoryIds
+    });
 
-//     await category.save();
-//     return category;
-// };
+    await movie.save();
+    return movie;
+};
 
-// // Fetch categories that are associated with a specific user (check if userId exists in the userIds array)
-// const getCategories = async (userId) => {
-//     return await Category.find({ userIds: userId });  // Check if userId exists in the userIds array
-// };
+// Get all movies
+const getMovies = async () => {
+    return await Movie.find({});
+};
 
-// // Get a category by name
-// const getCategoryByName = async (name) => {
-//     return await Category.findOne({ name });  // Find category by name
-// };
+// Get a specific movie by ID
+const getMovieById = async (id) => {
+    return await Movie.findById(id);
+};
 
-// // Fetch a specific category by ID and ensure it belongs to the user (check if userId exists in the userIds array)
-// const getCategoryById = async (id, userId) => {
-//     return await Category.findOne({ _id: id, userIds: userId });  // Check if userId exists in the userIds array
-// };
+// Update a specific movie by ID
+const updateMovie = async (id, { name, categoryIds }) => {
+    const movie = await Movie.findById(id);
+    if (!movie) return null;
 
-// // Update a category and ensure it belongs to the user (adding/removing userId from the userIds array)
-// const updateCategory = async (id, { name, promoted, userId }) => {
-// //     return await Category.findOneAndUpdate(
-// //         { _id: id, userIds: { $in: userIds } },  // Ensure the userIds array contains the userIds
-// //         { name, promoted },
-// //         { new: true }
-// //     );
-// // };
-//     const updatedCategory = await Category.findOneAndUpdate(
-//     { _id: id, userIds: userId },    // Find by category ID and user ID
-//     { name, promoted },      // Fields to update
-//     { new: true }            // Return the updated category
-//     );
+    if (name) movie.name = name;
+    if (categoryIds) {
+        // Remove the first categoryId if it exists
+        if (movie.categoryIds.length > 0) {
+            movie.categoryIds.shift();
+        }
+        // Convert existing categoryIds and new categoryIds to a set to avoid duplicates
+        const categoryIdsSet = new Set([categoryIds]);
+        movie.categoryIds = Array.from(categoryIdsSet);
+        
+    }
 
-// return updatedCategory;  // Return the updated category
-// };
+    await movie.save();
+    return movie;
+};
 
-// // Delete a category and ensure it belongs to the user (check if userId exists in the userIds array)
-// const deleteCategory = async (id, userId) => {
-//     return await Category.findOneAndDelete({ _id: id, userIds: userId });  // Check if userId exists in the userIds array
-// };
+// Delete a specific movie by ID
+const deleteMovie = async (id) => {
+    const movie = await Movie.findByIdAndDelete(id);
+    if (movie) {
+        // Remove the movie ID from the associated categories
+        await Category.updateMany(
+            { movieIds: id },
+            { $pull: { movieIds: id } }
+        );
+    }
+    return movie;
+};
 
 // Define a method that returns movie recommendations for a specific user and movie
 const getRecommendations = async (userId, movieId) => {
@@ -83,4 +91,50 @@ const createRecommendation = async (userId, movieId) => {
     }
 };
 
-module.exports = { getRecommendations, createRecommendation };
+// Search movies by query
+const searchMovie = async (query) => {
+    return await Movie.find({
+        $or: [
+            { name: new RegExp(query, 'i') },
+            { categoryIds: new RegExp(query, 'i') }
+        ]
+    });
+};
+
+// Get movies by categories
+const getMoviesByCategories = async (userId) => {
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    const categories = await Category.find({});
+    const moviesByCategories = [];
+
+    for (const category of categories) {
+        if (category.promoted.includes(userId)) {
+            const movies = await Movie.find({
+                _id: { $nin: user.watch_list },
+                categoryIds: category._id
+            }).limit(20);
+
+            moviesByCategories.push({
+                category: category.name,
+                movies
+            });
+        }
+    }
+
+    const watchedMovies = await Movie.find({
+        _id: { $in: user.watch_list }
+    }).limit(20);
+
+    moviesByCategories.push({
+        category: 'Watched Movies',
+        movies: watchedMovies
+    });
+
+    return moviesByCategories;
+};
+
+module.exports = { createMovie, getMovies, getMovieById, updateMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie, getMoviesByCategories};
