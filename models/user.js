@@ -11,7 +11,13 @@ const userSchema = new Schema({
     password: { 
         type: String,
         required: true,
-        // min: 7
+        min: 7
+    },
+
+    idNumber: {
+        type: Number,
+        required: true,
+        unique: true,
     },
 
     email: { 
@@ -22,7 +28,7 @@ const userSchema = new Schema({
         max: 255,
     },
 
-    watch_list:{
+    watch_list: {
         type: [String], 
         default: []
     },
@@ -31,6 +37,17 @@ const userSchema = new Schema({
         type: String,
         default: 'default.jpg'
     },
+});
+
+// Transform the output to exclude `idNumber`
+userSchema.set('toJSON', {
+    transform: (doc, ret) => {
+        // Remove the `idNumber` field
+        delete ret.idNumber; 
+        // Remove sensitive data like `password`
+        // delete ret.password; 
+        return ret;
+    }
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -5,6 +5,7 @@ const createUser = async (username, password, email, watch_list, picture) => {
     const user = new User({
         username,
         password,
+        idNumber,
         email,
         watch_list,
         picture
@@ -16,7 +17,7 @@ const createUser = async (username, password, email, watch_list, picture) => {
 
 // Get user's details by id
 const getUserById = async (id) => {
-    return await User.findById // WE WILL CHANGE THIS LATER
+    return await User.findById(id);
 };
 
 // Get user's details by username
@@ -24,4 +25,8 @@ const getUserByUsername = async (username) => {
     return await User.findOne({ username });
 };
 
-module.exports = { createUser, getUserById, getUserByUsername };
+const getAllUsers = async () => {
+    return await User.find({});
+};
+
+module.exports = { createUser, getUserById, getUserByUsername, getAllUsers };
