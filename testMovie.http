@@ -30,19 +30,20 @@ X-User-Id: 12345
 
 ### GET Request to fetch all movies
 GET http://localhost:3000/api/movies
-X-User-Id: 12345
+X-User-Id: 677a322df8ecf2fbed1be3eb
 
 ### GET Request to fetch a specific movie by ID
 GET http://localhost:3000/api/movies/677a2f5bae01f686add8fc7d
 X-User-Id: 12345
 
 ### PUT Request to update a specific movie by ID
-PUT http://localhost:3000/api/movies/67780527088182814110c6bc
+PUT http://localhost:3000/api/movies/677a2f54ae01f686add8fc7a
 Content-Type: application/json
 X-User-Id: 12345
 
 {
-  "categoryIds": "6773e40cb04c345a8ff87c82"
+    "name": "Frozen 3",
+    "categoryIds": "677a360158388258ff806cd7"
 }
 
 ### DELETE Request to delete a specific movie by ID
