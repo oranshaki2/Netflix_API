@@ -37,7 +37,7 @@ const userSchema = new Schema({
         type: String,
         default: 'default.jpg'
     },
-});
+}, {versionKey: false}); // Disable the version key from the schema.
 
 // Transform the output to exclude `idNumber`
 userSchema.set('toJSON', {

@@ -17,7 +17,7 @@ const Movie = new Schema({
     idNumber: {
         type: Number,
         required: true,
-        unique: true,
+        // unique: true,
     },
 
     categoryIds: {  // Array of category IDs associated with the category.
