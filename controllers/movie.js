@@ -1,6 +1,18 @@
 const movieService = require('../services/movie');
 const mongoose = require('mongoose');
 
+async function generateIdNumber() {
+    const allMovies = await movieService.getMovies();
+    let highestId = 0;
+    for (const movie of allMovies) {
+        if (movie.idNumber > highestId) {
+            highestId = movie.idNumber;
+        }
+    }
+    // The first user will have an id of 1
+    return highestId + 1;
+}
+
 // Create a new movie
 const createMovie = async (req, res) => {
     const userId = req.headers['x-user-id'];
@@ -8,8 +20,8 @@ const createMovie = async (req, res) => {
         return res.status(400).json({ errors: ['User ID is required'] });
     }
     const { name, categoryIds } = req.body;
-
-    const movie = await movieService.createMovie(name, categoryIds);
+    const idNumber = await generateIdNumber();
+    const movie = await movieService.createMovie(name, categoryIds, idNumber);
     res.status(201).send();
 };
 
@@ -74,7 +86,7 @@ const getRecommendations = async (req, res) => {
         const recommendations = await movieService.getRecommendations(userId, movieId);
         //res.json(recommendations);
         //res.status(204).send();
-        } catch (error) {
+    } catch (error) {
         //res.status(500).json({ errors: [error.message] });
     }
 };

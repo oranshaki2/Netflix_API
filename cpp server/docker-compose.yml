@@ -1,18 +1,41 @@
 services:
-  server:
+  mongo:
+    image: mongo:latest
+    container_name: netflix-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  web-server:
     build:
       context: .
-      dockerfile: Dockerfile.server
-    entrypoint: ["./server"]
+      dockerfile: Dockerfile.web-server
+    restart: always
+    entrypoint: ["./web-server"]
+    ports:
+      - "8080:8080"
+    container_name: netflix-web-server
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/ntfx
+      - RECOMMENDATION_SERVER_HOST=recommendation-server
+      - RECOMMENDATION_SERVER_PORT=8080
   
-  client:
+  recommendation-server:
     build:
       context: .
-      dockerfile: Dockerfile.client
-    entrypoint: ["python", "tcpClient.py"]
+      dockerfile: Dockerfile.recommendation-server
+    entrypoint: ["./recommendation-server"]
+    ports:
+      - "8080:8080"
+    container_name: netflix-recommendation-server
     stdin_open: true  # Keep stdin open for interactive use
     tty: true  # Allocate a TTY for interactive use
     init: true
+
+volumes:
+  mongo-data:
 
 # command to first create the images #
 #   docker-compose build 
@@ -24,9 +47,6 @@ services:
 # command to run server and client in interactive mode #
 # docker-compose run --name [srv_name] server [srv_port]
 # docker-compose run --name ntfx-client client [srv_name] [srv_port]
-
-# command to run gtest #
-# docker-compose run gtest
 
 # command to restart server and client #
 # docker start [server_container_id]

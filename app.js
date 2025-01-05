@@ -8,8 +8,6 @@ const movies = require('./routes/movie'); // Import the movie routes.
 const tokens = require('./routes/token');
 const users = require('./routes/user');// Import the token routes.
 
-
-
 require('dotenv').config({ path: './config/.env.local' });
 
 mongoose.connect(process.env.CONNECTION_STRING);
@@ -27,15 +25,12 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 app.use('/api/categories', categories);
 
 app.use('/api/movies', movies);
 app.use('/api/tokens', tokens)
 
 app.use('/api/users', users);
-
-
 
 // Start the server
 const PORT = process.env.PORT || 3000;
