@@ -72,4 +72,4 @@ X-User-Id: 12345
 ### POST Request to CPP server
 POST http://localhost:3000/api/movies/677a2f5bae01f686add8fc7d/recommend
 Content-Type: application/json
-X-User-Id: 1
+X-User-Id: 677a322df8ecf2fbed1be3eb

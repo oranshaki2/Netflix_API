@@ -2,6 +2,9 @@ const Category = require('../models/category');
 const Movie = require('../models/movie');
 const User = require('../models/user');
 const axios = require('axios');
+const UserController = require('../controllers/user');
+const MovieController = require('../controllers/movie');
+
 
 // Create a new movie
 const createMovie = async (name, categoryIds, idNumber) => {
@@ -39,7 +42,7 @@ const updateMovie = async (id, { name, categoryIds }) => {
         // Convert existing categoryIds and new categoryIds to a set to avoid duplicates
         const categoryIdsSet = new Set([categoryIds]);
         movie.categoryIds = Array.from(categoryIdsSet);
-        
+
     }
 
     await movie.save();
@@ -65,7 +68,7 @@ const getRecommendations = async (userId, movieId) => {
         const command = `GET ${userId} ${movieId}`;
         const response = await axios.post(
             'https://localhost:8080', // Server URL
-            {command} // Send the formatted string in the request body
+            { command } // Send the formatted string in the request body
         );
         console.log(response.data); // Return the response from the server
     } catch (error) {
@@ -73,17 +76,30 @@ const getRecommendations = async (userId, movieId) => {
     }
 };
 
+// Get a specific IDNumber movie by id object
+const getMovieIdNumber = async (id) => {
+    const movie = await movieService.getMovieById(id);
+    if (!movie) {
+        return res.status(404).json({ errors: ['Movie not found'] });
+    }
+    return movie.idNumber;
+};
+
 // Define a method that add a movie for a specific user and send it to the recommendation
 //  system
 const createRecommendation = async (userId, movieId) => {
     try {
-        const command = `POST ${userId} ${movieId}`;
+        const userIdNumber = await UserController.getUserIdNumber(userId);
+        const movieIdNumber = await MovieController.getMovieIdNumber(movieId);
+        console.log({ userId, movieId });
+        console.log({ userIdNumber, movieIdNumber });
+        const command = `POST ${userIdNumber} ${movieIdNumber}`;
         const response = await axios.post(
             'https://localhost:8080', // Server URL
-            {command} // Send the formatted string in the request body
+            { command } // Send the formatted string in the request body
         );
         console.log(response.data); // Return the response from the server
-        if (response.data.includes('200 Ok')){
+        if (response.data.includes('200 Ok')) {
             const user = await User.findById(userId);
             user.findByIdAndUpdate(userId, { $addToSet: { watch_list: movieId } });
         }
@@ -138,4 +154,4 @@ const getMoviesByCategories = async (userId) => {
     return moviesByCategories;
 };
 
-module.exports = { createMovie, getMovies, getMovieById, updateMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie, getMoviesByCategories};
+module.exports = { createMovie, getMovies, getMovieById, updateMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie, getMoviesByCategories, getMovieIdNumber };

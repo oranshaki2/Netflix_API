@@ -28,7 +28,7 @@ router.route('/:id')
 // Define the route for getting recommendations and creating a new recommendation.    
 router.route('/:id/recommend')
     .get(movieController.getRecommendations)
-    .post(movieController.createRecommendation);
+    .post(movieController.createNewRecommendation);
 
 // Define the route for searching movies by query.
 router.route('/search/:query')
