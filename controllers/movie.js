@@ -48,15 +48,6 @@ const getMovie = async (req, res) => {
     res.json(movie);
 };
 
-// Get a specific movie by ID
-const getMovieIdNumber = async (id) => {
-    const movie = await movieService.getMovieById(id);
-    if (!movie) {
-        return res.status(404).json({ errors: ['Movie not found'] });
-    }
-    return movie.idNumber;
-};
-
 // Update a specific movie by ID
 const changeMovie = async (req, res) => {
     const userId = req.headers['x-user-id'];
@@ -99,19 +90,40 @@ const getRecommendations = async (req, res) => {
         //res.status(500).json({ errors: [error.message] });
     }
 };
-
-const createRecommendation = async (req, res) => {
+const createNewRecommendation = async (req, res) => {
     const userId = req.headers['x-user-id'];
     const movieId = req.params.id;
 
-    try {
-        const recommendation = await movieService.createRecommendation(userId, movieId);
-        //res.status(201).json(recommendation);
-    } catch (error) {
-        //res.status(500).json({ errors: [error.message] });
+    if (!userId) {
+        return res.status(400).json({ errors: ['User ID is required'] });
     }
 
+    try {
+        const recommendation = await movieService.createRecommendation(userId, movieId);
+        res.status(201).json({ recommendation });
+    } catch (error) {
+        res.status(500).json({ errors: [error.message] });
+    }
 };
+
+
+// const createNewRecommendation = async (req, res) => {
+//     const userId = req.headers['x-user-id'];
+//     const movieId = req.params.id;
+//     console.log(userId);
+//     console.log(movieId);
+//     if (!userId) {
+//         return res.status(400).json({ errors: ['User ID is required'] });
+//     }
+//     // try {
+//         const recommendation = await movieService.createRecommendation(userId, movieId);
+//         console.log('1');
+//         // res.status(201).json(recommendation);
+//     // } catch (error) {
+//         //res.status(500).json({ errors: [error.message] });
+//     // }
+
+// };
 
 // Search movies by query
 const searchMovie = async (req, res) => {
@@ -126,4 +138,4 @@ const searchMovie = async (req, res) => {
 };
 
 // module.exports = { createCategory, getCategories, getCategory, updateCategory, deleteCategory };
-module.exports = { createMovie, getMovies, getMovie, changeMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie, getMovieIdNumber };
+module.exports = { createMovie, getMovies, getMovie, changeMovie, deleteMovie, getRecommendations, createNewRecommendation, searchMovie };
