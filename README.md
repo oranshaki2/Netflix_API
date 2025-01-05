@@ -4,11 +4,50 @@ In this section, we built a web server that forms the core of the application an
 including saving data to a MongoDB server.  
 We will implement the screens themselves in the next part, in this part we implemented the server-side functionality.  
 
+## Installation
+To set up the project and install dependencies, run the following commands:  
+```bash
+npm init -y  
+npm install express  
+npm install cors  
+npm install mongoose  
+npm install dotenv  
+npm install axios  
+```
+
 ## Running the server using Dockerfile:  
+### Build the Docker Images
 The docker-compose allows running the web server and the recommendation system server.  
 Use the command:  
-
-## All possible commands:  
+  ```bash
+   docker-compose build 
+  ```
+Start with the web server using the following command:  
+  ```bash
+    docker-compose run --name <server_name> web-server <choose_port>
+  ```
+For example:
+   ```bash
+    docker-compose run --name ntfx-web-server server 8080
+   ```
+### In a new terminal, run the recommendations system server using the following command:
+   ```bash
+    docker-compose run --name <rec_system_server_name> server <server_name> <choose_port>
+   ```
+For example:
+   ```bash
+    docker-compose run --name ntfx-server server ntfx-web-server 8080
+   ```
+### To stop a running container, use:
+   ```bash
+   docker stop <container_id_or_name>
+   ```
+### To remove a container, use:
+   ```bash
+   docker rm <server_or_client_image_id>
+   ```
+---
+## Examples of how the project works in action: 
 ### _Login and registration_  
 Add a new user:  
 
