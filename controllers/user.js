@@ -26,10 +26,23 @@ const createUser = async (req, res) => {
     const existingUser = await userService.getUserByUsername(username);
     // Check if a user with the same username already exists
     if (existingUser) {
-        res.status(201).send();
+        return res.status(404).json({ errors: ['This username already exists.'] });
     }
-
-   
+    const existingEmail = await userService.getUserByEmail(email);
+    // Check if a user with the same email already exists
+    if (existingEmail) {
+        return res.status(404).json({ errors: ['This email already exists.'] });
+    }
+    const validPassword = password.length >= 7;
+    // Check if the password meets the minimum length requirement
+    if (!validPassword) {
+        return res.status(400).json({ errors: ['Password must be at least 7 characters long.'] });
+    }
+    const validEmail = email.includes('@') && email.includes('.') && email.length >= 5;
+    // Check if the email is valid
+    if (!validEmail) {
+        return res.status(400).json({ errors: ['Please enter a valid email address.'] });
+    }
 
     // Select a random picture from the available files-
     // Math.random() generates a random number between 0 (inclusive) and 1 (exclusive)
