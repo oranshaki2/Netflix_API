@@ -48,6 +48,15 @@ const getMovie = async (req, res) => {
     res.json(movie);
 };
 
+// Get a specific movie by ID
+const getMovieIdNumber = async (id) => {
+    const movie = await movieService.getMovieById(id);
+    if (!movie) {
+        return res.status(404).json({ errors: ['Movie not found'] });
+    }
+    return movie.idNumber;
+};
+
 // Update a specific movie by ID
 const changeMovie = async (req, res) => {
     const userId = req.headers['x-user-id'];
@@ -117,4 +126,4 @@ const searchMovie = async (req, res) => {
 };
 
 // module.exports = { createCategory, getCategories, getCategory, updateCategory, deleteCategory };
-module.exports = { createMovie, getMovies, getMovie, changeMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie };
+module.exports = { createMovie, getMovies, getMovie, changeMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie, getMovieIdNumber };
