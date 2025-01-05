@@ -4,10 +4,11 @@ const User = require('../models/user');
 const axios = require('axios');
 
 // Create a new movie
-const createMovie = async (name, categoryIds) => {
+const createMovie = async (name, categoryIds, idNumber) => {
     const movie = new Movie({
         name,
-        categoryIds
+        categoryIds,
+        idNumber
     });
 
     await movie.save();

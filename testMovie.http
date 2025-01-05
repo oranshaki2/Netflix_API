@@ -33,7 +33,7 @@ GET http://localhost:3000/api/movies
 X-User-Id: 12345
 
 ### GET Request to fetch a specific movie by ID
-GET http://localhost:3000/api/movies/67780527088182814110c6bc
+GET http://localhost:3000/api/movies/677808078c8f4a8c98608f60
 X-User-Id: 12345
 
 ### PUT Request to update a specific movie by ID

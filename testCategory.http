@@ -8,7 +8,7 @@ X-User-Id: 12345
 {
   "name": "Drama",
   "promoted": true,
-  "movieIds": "101 102 103"
+  "movieIds": "101 102 104"
 }
 
 ### POST Request to create a category
