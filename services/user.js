@@ -1,3 +1,4 @@
+const { get } = require('http');
 const User = require('../models/user');
 
 // Create a new user
@@ -33,13 +34,4 @@ const getAllUsers = async () => {
     return await User.find({});
 };
 
-// Get a specific IDNumber user by id object
-const getUserIdNumber = async (id) => {
-    const user = await userService.getUserById(id);
-    if (!user) {
-        return res.status(404).json({ errors: ['User not found'] });
-    }
-    return user.idNumber;
-};
-
-module.exports = { createUser, getUserById, getUserByUsername, getUserByEmail, getAllUsers, getUserIdNumber };
+module.exports = { createUser, getUserById, getUserByUsername, getUserByEmail, getAllUsers};
