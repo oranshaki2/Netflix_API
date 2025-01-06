@@ -28,7 +28,7 @@ const getUserByUsername = async (username) => {
 
 const getUserByEmail = async (email) => {
     return await User.findOne({ email });
-}
+};
 
 const getAllUsers = async () => {
     return await User.find({});
