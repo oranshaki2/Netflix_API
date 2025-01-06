@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/categories', categories);
 
 app.use('/api/movies', movies);
-app.use('/api/tokens', tokens)
+app.use('/api/tokens', tokens);
 
 app.use('/api/users', users);
 
