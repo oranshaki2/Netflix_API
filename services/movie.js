@@ -2,9 +2,7 @@ const Category = require('../models/category');
 const Movie = require('../models/movie');
 const User = require('../models/user');
 const axios = require('axios');
-const UserController = require('../controllers/user');
-const MovieController = require('../controllers/movie');
-
+const userService = require('../services/user');
 
 // Create a new movie
 const createMovie = async (name, categoryIds, idNumber) => {
@@ -84,25 +82,40 @@ const getMovieIdNumber = async (id) => {
     }
     return movie.idNumber;
 };
+// Get a specific IDNumber user by id object
+const getUserIdNumber = async (id) => {
+    console.log('hey');
+    const user = await userService.getUserById(id);
+    console.log(userService.getUserById(id));
+    if (!user) {
+        return res.status(404).json({ errors: ['User not found'] });
+    }
+    console.log(user.idNumber);
+    return user.idNumber;
+};
 
 // Define a method that add a movie for a specific user and send it to the recommendation
 //  system
 const createRecommendation = async (userId, movieId) => {
     try {
-        const userIdNumber = await UserController.getUserIdNumber(userId);
-        const movieIdNumber = await MovieController.getMovieIdNumber(movieId);
+        console.log('Fetching userIdNumber...');
+        const userIdNumber = await getUserIdNumber(userId);
+        console.log('userIdNumber:', userIdNumber);
+        const movieIdNumber = await getMovieIdNumber(movieId);
         console.log({ userId, movieId });
         console.log({ userIdNumber, movieIdNumber });
-        const command = `POST ${userIdNumber} ${movieIdNumber}`;
+        const command = 'POST ${userIdNumber} ${movieIdNumber}';
         const response = await axios.post(
             'https://localhost:8080', // Server URL
             { command } // Send the formatted string in the request body
         );
-        console.log(response.data); // Return the response from the server
+        //console.log(response.data); // Return the response from the server
+        
         if (response.data.includes('200 Ok')) {
             const user = await User.findById(userId);
             user.findByIdAndUpdate(userId, { $addToSet: { watch_list: movieId } });
         }
+        return response.data;
     } catch (error) {
         //console.error('Error sending data:', error.message);
     }
@@ -154,4 +167,4 @@ const getMoviesByCategories = async (userId) => {
     return moviesByCategories;
 };
 
-module.exports = { createMovie, getMovies, getMovieById, updateMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie, getMoviesByCategories, getMovieIdNumber };
+module.exports = { createMovie, getMovies, getMovieById, updateMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie, getMoviesByCategories, getMovieIdNumber, getUserIdNumber };
