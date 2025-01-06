@@ -14,11 +14,11 @@ X-User-Id: 12345
 ### POST Request to create a category
 POST http://localhost:3000/api/categories
 Content-Type: application/json
-X-User-Id: 12346
+X-User-Id: 677a322df8ecf2fbed1be3eb
 
 {
   "name": "Drama",
-  "promoted": false,
+  "promoted": true,
   "movieIds": "104 101 105"
 }
 

@@ -1,3 +1,4 @@
+const movie = require('../models/movie');
 const movieService = require('../services/movie');
 const mongoose = require('mongoose');
 
@@ -20,6 +21,9 @@ const createMovie = async (req, res) => {
         return res.status(400).json({ errors: ['User ID is required'] });
     }
     const { name, categoryIds } = req.body;
+    if (movie.find({ name })) {    
+        return res.status(404).json({ errors: ['Movie already exists'] });
+    }
     const idNumber = await generateIdNumber();
     const movie = await movieService.createMovie(name, categoryIds, idNumber);
     res.status(201).send();
@@ -55,7 +59,9 @@ const changeMovie = async (req, res) => {
         return res.status(400).json({ errors: ['User ID is required'] });
     }
     const { name, categoryIds } = req.body;
-
+    // Check if all parameters are provided
+    if (!name || !categoryIds) return res.status(400).json({ errors: ['Name and category IDs are required'] });
+    
     const updatedMovie = await movieService.updateMovie(req.params.id, { name, categoryIds });
     if (!updatedMovie) {
         return res.status(404).json({ errors: ['Movie not found'] });
