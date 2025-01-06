@@ -1,4 +1,3 @@
-const { get } = require('http');
 const User = require('../models/user');
 
 // Create a new user
@@ -28,10 +27,17 @@ const getUserByUsername = async (username) => {
 
 const getUserByEmail = async (email) => {
     return await User.findOne({ email });
-};
+}
 
 const getAllUsers = async () => {
     return await User.find({});
 };
 
-module.exports = { createUser, getUserById, getUserByUsername, getUserByEmail, getAllUsers};
+const updateUser = async (user, movieId) => {
+    if (!user.watch_list.includes(movieId)) {
+        user.watch_list.push(movieId); // Add movieId to the list
+        await user.save(); // Save changes to the database
+    }
+};
+
+module.exports = { createUser, getUserById, getUserByUsername, getUserByEmail, getAllUsers, updateUser };

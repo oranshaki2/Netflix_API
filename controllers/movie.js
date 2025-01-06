@@ -1,5 +1,6 @@
-const Movie = require('../models/movie');
+const movie = require('../models/movie');
 const movieService = require('../services/movie');
+const userService = require('../services/user');
 const mongoose = require('mongoose');
 
 async function generateIdNumber() {
@@ -21,17 +22,11 @@ const createMovie = async (req, res) => {
         return res.status(400).json({ errors: ['User ID is required'] });
     }
     const { name, categoryIds } = req.body;
-
-    // Check if the movie already exists
-    const existingMovie = await Movie.findOne({ name });
-    if (existingMovie) {
-        return res.status(404).json({ errors: ['Movie name already used'] });
-    }   
+    // if (movie.find({ name })) {    
+    //     return res.status(404).json({ errors: ['Movie already exists'] });
+    // }
     const idNumber = await generateIdNumber();
-    const movie = await movieService.createMovie(name, categoryIds,idNumber);
-    if (!movie) {
-        return res.status(400).json({ errors: ['Movie name already used'] });
-    }
+    const movie = await movieService.createMovie(name, categoryIds, idNumber);
     res.status(201).send();
 };
 
@@ -67,7 +62,7 @@ const changeMovie = async (req, res) => {
     const { name, categoryIds } = req.body;
     // Check if all parameters are provided
     if (!name || !categoryIds) return res.status(400).json({ errors: ['Name and category IDs are required'] });
-
+    
     const updatedMovie = await movieService.updateMovie(req.params.id, { name, categoryIds });
     if (!updatedMovie) {
         return res.status(404).json({ errors: ['Movie not found'] });
@@ -94,20 +89,21 @@ const getRecommendations = async (req, res) => {
     const userId = req.headers['x-user-id'];
     const movieId = req.params.id;
 
-    try {
-        const recommendations = await movieService.getRecommendations(userId, movieId);
-        //res.json(recommendations);
-        //res.status(204).send();
-    } catch (error) {
-        //res.status(500).json({ errors: [error.message] });
-    }
+    const recommendations = await movieService.getRecommendations(userId, movieId);
+    console.log(recommendations);
+    res.status(200).json(recommendations);
 };
-const createNewRecommendation = async (req, res) => {
+
+const createRecommendation = async (req, res) => {
     const userId = req.headers['x-user-id'];
     const movieId = req.params.id;
 
     if (!userId) {
         return res.status(400).json({ errors: ['User ID is required'] });
+    }
+    const userExists = await userService.getUserById(userId);
+    if (!userExists) {
+        return res.status(404).json({ errors: ['User not found'] });
     }
 
     try {
@@ -117,25 +113,6 @@ const createNewRecommendation = async (req, res) => {
         res.status(500).json({ errors: [error.message] });
     }
 };
-
-
-// const createNewRecommendation = async (req, res) => {
-//     const userId = req.headers['x-user-id'];
-//     const movieId = req.params.id;
-//     console.log(userId);
-//     console.log(movieId);
-//     if (!userId) {
-//         return res.status(400).json({ errors: ['User ID is required'] });
-//     }
-//     // try {
-//         const recommendation = await movieService.createRecommendation(userId, movieId);
-//         console.log('1');
-//         // res.status(201).json(recommendation);
-//     // } catch (error) {
-//         //res.status(500).json({ errors: [error.message] });
-//     // }
-
-// };
 
 // Search movies by query
 const searchMovie = async (req, res) => {
@@ -149,5 +126,4 @@ const searchMovie = async (req, res) => {
     }
 };
 
-// module.exports = { createCategory, getCategories, getCategory, updateCategory, deleteCategory };
-module.exports = { createMovie, getMovies, getMovie, changeMovie, deleteMovie, getRecommendations, createNewRecommendation, searchMovie };
+module.exports = { createMovie, getMovies, getMovie, changeMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie };

@@ -24,7 +24,7 @@ Content-Type: application/json
 X-User-Id: 12345
 
 {
-  "name": "Frozen",
+  "name": "Frozen 2",
   "categoryIds": "123 456"
 }
 
@@ -47,8 +47,8 @@ X-User-Id: 12345
 }
 
 ### DELETE Request to delete a specific movie by ID
-DELETE http://localhost:3000/api/movies/67780527088182814110c6bc
-X-User-Id: 12345
+DELETE http://localhost:3000/api/movies/677b7f2255b36ed6b4e23529
+X-User-Id: 677bbd4454ceb57c5084b0d5
 
 ### GET Request to search movies by query
 GET http://localhost:3000/api/movies/search/Frozen
@@ -71,6 +71,34 @@ GET http://localhost:3000/api/movies/677a2f5bae01f686add8fc7d/recommend
 X-User-Id: 12345
 
 ### POST Request to CPP server
-POST http://localhost:3000/api/movies/677a2f5bae01f686add8fc7d/recommend
+POST http://localhost:3000/api/movies/677b7f2255b36ed6b4e23529/recommend
 Content-Type: application/json
-X-User-Id: 677a322df8ecf2fbed1be3eb
+X-User-Id: 677a414d627a30004f380913
+
+
+### POST Request to CPP server
+POST http://localhost:3000/api/movies/677b7f2255b36ed6b4e23529/recommend
+Content-Type: application/json
+X-User-Id: 677bbd4454ceb57c5084b0d5
+
+
+### POST Request to CPP server
+POST http://localhost:3000/api/movies/677bbb56240b179994d9cac2/recommend
+Content-Type: application/json
+X-User-Id: 677bbd4454ceb57c5084b0d5
+
+### GET Request to CPP server
+GET http://localhost:3000/api/movies/677bbb56240b179994d9cac2/recommend
+Content-Type: application/json
+X-User-Id: 677a414d627a30004f380913
+
+
+### GET Request to CPP server
+POST  http://localhost:3000/api/movies/677bbb56240b179994d9cac2/recommend
+Content-Type: application/json
+X-User-Id: 677a414d627a30004f380913
+
+### GET Request to CPP server
+POST http://localhost:3000/api/movies/677bca39e2fc138c08323a70/recommend
+Content-Type: application/json
+X-User-Id: 677bbd4454ceb57c5084b0d5
