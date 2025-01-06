@@ -53,7 +53,7 @@ const deleteMovie = async (movieId) => {
     const movie = await Movie.findById(movieId);
     //const movie = await Movie.findByIdAndDelete(movieId);
     if (movie) {
-        console.log(movie);
+        //console.log(movie);
         // Remove the movie ID from the associated categories
         await Category.updateMany(
             { movieIds: movieId },
@@ -64,13 +64,14 @@ const deleteMovie = async (movieId) => {
 
         // Iterate over the users and perform your action
         for (const user of users) {
-            const userIdNumber = await getUserIdNumber(movieId);
+            const userIdNumber = await getUserIdNumber(user._id);
             
             const command = `DELETE ${userIdNumber} ${movieIdNumber}`;
             // Call the function to send the command via net
             const response = await sendCommand(command, 'localhost', 8080);
-            console.log(response);
-            await user.watch_list.pull(id);
+            //console.log(response);
+            await user.watch_list.pull(movieId.toString());
+            await user.save();
         }
         await Movie.findByIdAndDelete(movieId);
     }
@@ -90,7 +91,7 @@ const getRecommendations = async (userId, movieId) => {
     const command = `GET ${userIdNumber} ${movieIdNumber}`;
     // Call the function to send the command via net
     const response = await sendCommand(command, 'localhost', 8080);
-    console.log(response);
+    //console.log(response);
     if (response.trim().startsWith('200 Ok')) {
         // Extract data after the first two lines (200 Ok and the blank line)
         const responseLines = response.split('\n').map(line => line.trim());
@@ -125,7 +126,7 @@ const getMovieIdNumber = async (id) => {
     if (!movie) {
         //return res.status(404).json({ errors: ['Movie not found'] });
     }
-    console.log(movie.idNumber);
+    //console.log(movie.idNumber);
     return movie.idNumber;
 };
 

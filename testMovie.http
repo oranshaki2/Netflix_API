@@ -47,8 +47,8 @@ X-User-Id: 12345
 }
 
 ### DELETE Request to delete a specific movie by ID
-DELETE http://localhost:3000/api/movies/677b7f2255b36ed6b4e23529
-X-User-Id: 677bbd4454ceb57c5084b0d5
+DELETE http://localhost:3000/api/movies/677c4dd10819e57091071a80
+X-User-Id: 677be4eeeed43edec74518c9
 
 ### GET Request to search movies by query
 GET http://localhost:3000/api/movies/search/Frozen
@@ -94,11 +94,11 @@ X-User-Id: 677a414d627a30004f380913
 
 
 ### GET Request to CPP server
-POST  http://localhost:3000/api/movies/677bbb56240b179994d9cac2/recommend
+POST  http://localhost:3000/api/movies/677c4dd10819e57091071a80/recommend
 Content-Type: application/json
-X-User-Id: 677a414d627a30004f380913
+X-User-Id: 677be4eeeed43edec74518c9
 
 ### GET Request to CPP server
-POST http://localhost:3000/api/movies/677bca39e2fc138c08323a70/recommend
+POST http://localhost:3000/api/movies/677c4dd10819e57091071a80/recommend
 Content-Type: application/json
-X-User-Id: 677bbd4454ceb57c5084b0d5
+X-User-Id: 677c2190d4439e4e6680e0e8
