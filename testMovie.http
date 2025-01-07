@@ -83,7 +83,7 @@ X-User-Id: 677bbd4454ceb57c5084b0d5
 
 
 ### POST Request to CPP server
-POST http://localhost:3000/api/movies/677bbb56240b179994d9cac2/recommend
+POST http://localhost:3000/api/movies/677b97a8f2aae6e494dacaf0/recommend
 Content-Type: application/json
 X-User-Id: 677bbd4454ceb57c5084b0d5
 
@@ -99,6 +99,6 @@ Content-Type: application/json
 X-User-Id: 677be4eeeed43edec74518c9
 
 ### GET Request to CPP server
-POST http://localhost:3000/api/movies/677a2f54ae01f686add8fc7a/recommend
+POST http://localhost:3000/api/movies/677a65a0039ba77bc1d2e7e3/recommend
 Content-Type: application/json
 X-User-Id: 677a3535ff2c327b25afe4c9

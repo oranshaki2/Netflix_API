@@ -214,10 +214,8 @@ const getMoviesByCategories = async (userId) => {
             });
         }
     }
-
-    const watchedMovies = await Movie.find({
-        _id: { $in: user.watch_list }
-    }).limit(20);
+    const watchedMoviesList = user.watch_list || [];
+    const watchedMovies = watchedMoviesList.slice(-20);
 
     moviesByCategories.push({
         category: 'Watched Movies',
