@@ -20,5 +20,27 @@ Content-Type: application/json
   "picture": "https://example.com/jane.jpg"
 }
 
+### Create a new user
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+  "username": "jane_dol",
+  "password": "securePassword222",
+  "email": "jane.dol@example.com",
+  "picture": "https://example.com/jane.jpg"
+}
+
+### Create a new user
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+  "username": "jane_don",
+  "password": "securePassword246",
+  "email": "jane.don@example.com",
+  "picture": "https://example.com/jane.jpg"
+}
+
 ### Get user details by ID
 GET http://localhost:3000/api/users/677a322df8ecf2fbed1be3eb

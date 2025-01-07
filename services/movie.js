@@ -51,9 +51,7 @@ const updateMovie = async (id, { name, categoryIds }) => {
 // Delete a specific movie by ID
 const deleteMovie = async (movieId) => {
     const movie = await Movie.findById(movieId);
-    //const movie = await Movie.findByIdAndDelete(movieId);
     if (movie) {
-        //console.log(movie);
         // Remove the movie ID from the associated categories
         await Category.updateMany(
             { movieIds: movieId },
@@ -65,11 +63,10 @@ const deleteMovie = async (movieId) => {
         // Iterate over the users and perform your action
         for (const user of users) {
             const userIdNumber = await getUserIdNumber(user._id);
-            
+
             const command = `DELETE ${userIdNumber} ${movieIdNumber}`;
             // Call the function to send the command via net
             const response = await sendCommand(command, 'localhost', 8080);
-            //console.log(response);
             await user.watch_list.pull(movieId.toString());
             await user.save();
         }
@@ -87,16 +84,15 @@ const getRecommendations = async (userId, movieId) => {
     const userIdNumber = await getUserIdNumber(userId);
     const movieIdNumber = await getMovieIdNumber(movieId);
     const user = await UserService.getUserById(userId);
-    
+
     const command = `GET ${userIdNumber} ${movieIdNumber}`;
     // Call the function to send the command via net
     const response = await sendCommand(command, 'localhost', 8080);
-    //console.log(response);
     if (response.trim().startsWith('200 Ok')) {
         // Extract data after the first two lines (200 Ok and the blank line)
         const responseLines = response.split('\n').map(line => line.trim());
         const idLine = responseLines[2] || ''; // Third line contains IDs (if present)
-        
+
         // Split the line into individual numbers and parse them
         const idNumbers = idLine.split(' ').filter(id => id).map(id => {
             const num = Number(id);
@@ -107,26 +103,19 @@ const getRecommendations = async (userId, movieId) => {
         });
         const movieIds = await getMoviesByIdNumbers(idNumbers);
 
-        // Convert the data to numbers (or leave as strings if needed)
-        // const numericIdNumbers = idNumbers.filter(line => line).map(Number);
-
-        // // Fetch MongoDB IDs for the movies using `idNumber`
-        // const movieIds = await getMoviesByIdNumbers(numericIdNumbers);
-
         // Map and return MongoDB _id values
         const mongoIds = movieIds.map(movie => movie._id.toString());
         return mongoIds;
     }
-    return [];
+    return response;
 };
 
 // Get a specific IDNumber movie by id object
 const getMovieIdNumber = async (id) => {
     const movie = await Movie.findById(id);
     if (!movie) {
-        //return res.status(404).json({ errors: ['Movie not found'] });
+        return res.status(404).json({ errors: ['Movie not found'] });
     }
-    //console.log(movie.idNumber);
     return movie.idNumber;
 };
 
@@ -140,10 +129,17 @@ const createRecommendation = async (userId, movieId) => {
 
         // Call the function to send the command via net
         const response = await sendCommand(command, 'localhost', 8080);
-        console.log(response);
         if (response.trim() === '201 Created') {
             UserService.updateUser(user, movieId);
         }
+        if (response.trim() === '404 Not Found') {
+            const command = `PATCH ${userIdNumber} ${movieIdNumber}`;
+            const response = await sendCommand(command, 'localhost', 8080);
+            if (response.trim() === '204 No Content') {
+                UserService.updateUser(user, movieId);
+            }
+        }
+        return response;
     }
     // If the user has a watch_list, update the recommendation
     else {
@@ -151,12 +147,11 @@ const createRecommendation = async (userId, movieId) => {
 
         // Call the function to send the command via net
         const response = await sendCommand(command, 'localhost', 8080);
-        console.log(response);
         if (response.trim() === '204 No Content') {
             UserService.updateUser(user, movieId);
         }
+        return response;
     }
-
 };
 
 const sendCommand = (command, host, port) => {

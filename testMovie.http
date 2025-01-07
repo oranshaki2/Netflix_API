@@ -47,7 +47,7 @@ X-User-Id: 677a3535ff2c327b25afe4c9
 }
 
 ### DELETE Request to delete a specific movie by ID
-DELETE http://localhost:3000/api/movies/677c4dd10819e57091071a80
+DELETE http://localhost:3000/api/movies/677d9a645da55b21f8e8a8fd
 X-User-Id: 677be4eeeed43edec74518c9
 
 ### GET Request to search movies by query
@@ -88,17 +88,17 @@ Content-Type: application/json
 X-User-Id: 677bbd4454ceb57c5084b0d5
 
 ### GET Request to CPP server
-GET http://localhost:3000/api/movies/677bbb56240b179994d9cac2/recommend
+GET http://localhost:3000/api/movies/677d91a598702e692043f361/recommend
 Content-Type: application/json
-X-User-Id: 
+X-User-Id: 677d936c6d6d9e1c2a9fa743
 
 
 ### GET Request to CPP server
-POST  http://localhost:3000/api/movies/677c4dd10819e57091071a80/recommend
+POST  http://localhost:3000/api/movies/677d92f56d6d9e1c2a9fa737/recommend
 Content-Type: application/json
-X-User-Id: 677be4eeeed43edec74518c9
+X-User-Id: 677d936c6d6d9e1c2a9fa743
 
 ### GET Request to CPP server
-POST http://localhost:3000/api/movies/677a65a0039ba77bc1d2e7e3/recommend
+POST http://localhost:3000/api/movies/677d91a598702e692043f361/recommend
 Content-Type: application/json
-X-User-Id: 677a3535ff2c327b25afe4c9
+X-User-Id: 677d9477cb5eaf9fcf337a78
