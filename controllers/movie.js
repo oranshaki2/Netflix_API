@@ -1,7 +1,6 @@
 const movie = require('../models/movie');
 const movieService = require('../services/movie');
 const userService = require('../services/user');
-const mongoose = require('mongoose');
 
 async function generateIdNumber() {
     const allMovies = await movieService.getMovies();
@@ -62,7 +61,7 @@ const changeMovie = async (req, res) => {
     const { name, categoryIds } = req.body;
     // Check if all parameters are provided
     if (!name || !categoryIds) return res.status(400).json({ errors: ['Name and category IDs are required'] });
-    
+
     const updatedMovie = await movieService.updateMovie(req.params.id, { name, categoryIds });
     if (!updatedMovie) {
         return res.status(404).json({ errors: ['Movie not found'] });
@@ -90,8 +89,8 @@ const getRecommendations = async (req, res) => {
     const movieId = req.params.id;
 
     const recommendations = await movieService.getRecommendations(userId, movieId);
-    console.log(recommendations);
-    res.status(200).json(recommendations);
+    const statusCode = parseInt(recommendations.split(' ')[0], 10);
+    res.status(statusCode).json();
 };
 
 const createRecommendation = async (req, res) => {
@@ -105,13 +104,9 @@ const createRecommendation = async (req, res) => {
     if (!userExists) {
         return res.status(404).json({ errors: ['User not found'] });
     }
-
-    try {
         const recommendation = await movieService.createRecommendation(userId, movieId);
-        res.status(201).json({ recommendation });
-    } catch (error) {
-        res.status(500).json({ errors: [error.message] });
-    }
+        const statusCode = parseInt(recommendation.split(' ')[0], 10);
+        res.status(statusCode).json();
 };
 
 // Search movies by query

@@ -1,5 +1,4 @@
 const tokenService = require('../services/token');
-const mongoose = require('mongoose');
 
 const checkIfUserRegistered = async (req, res) => {
     const { username, password } = req.body;
