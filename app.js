@@ -10,7 +10,7 @@ const users = require('./routes/user');// Import the token routes.
 
 require('dotenv').config({ path: './config/.env.local' });
 
-mongoose.connect(process.env.CONNECTION_STRING);
+mongoose.connect(process.env.MONGO_URI);
 
 // Check if the connection is successful
 mongoose.connection.once('open', () => {

@@ -1,0 +1,11 @@
+# Use ubuntu:22.04 as the base image
+FROM ubuntu:22.04
+
+# Install bash and curl
+RUN apt-get update && apt-get install -y nodejs npm curl bash
+
+# Set the working directory
+WORKDIR /app
+
+# Default command to keep the container interactive for running curl commands
+CMD ["/bin/bash"]

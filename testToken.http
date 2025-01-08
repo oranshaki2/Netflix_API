@@ -1,5 +1,5 @@
 ### Create a new user
-POST http://localhost:3000/api/token
+POST http://web-server:3000/api/token
 Content-Type: application/json
 
 {
