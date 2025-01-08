@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// const category = require('./movie');
 
 const Schema = mongoose.Schema; 
 
@@ -10,10 +9,6 @@ const Movie = new Schema({
         required: true,
         unique: true
     },
-    // userIds: { 
-    //     type: [String], 
-    //     required: true
-    //  },
     idNumber: {
         type: Number,
         required: true,
