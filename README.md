@@ -71,9 +71,7 @@ Inside the container, use the MongoDB shell
     mongosh
    ```
 Once connected, you can interact with the database:  
-   ```bash
-    mongosh
-   ```
+
 List all databases:  
    ```bash
     show dbs;
