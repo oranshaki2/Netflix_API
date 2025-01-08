@@ -1,6 +1,7 @@
-const movie = require('../models/movie');
+const Movie = require('../models/movie');
 const movieService = require('../services/movie');
 const userService = require('../services/user');
+const mongoose = require('mongoose');
 
 async function generateIdNumber() {
     const allMovies = await movieService.getMovies();
@@ -21,9 +22,10 @@ const createMovie = async (req, res) => {
         return res.status(400).json({ errors: ['User ID is required'] });
     }
     const { name, categoryIds } = req.body;
-    // if (movie.find({ name })) {    
-    //     return res.status(404).json({ errors: ['Movie already exists'] });
-    // }
+    const existingMovie = await Movie.findOne({ name });
+    if (existingMovie) {
+        return res.status(404).json({ errors: ['Movie already exists'] });
+    }
     const idNumber = await generateIdNumber();
     const movie = await movieService.createMovie(name, categoryIds, idNumber);
     res.status(201).send();
@@ -89,8 +91,8 @@ const getRecommendations = async (req, res) => {
     const movieId = req.params.id;
 
     const recommendations = await movieService.getRecommendations(userId, movieId);
-    const statusCode = parseInt(recommendations.split(' ')[0], 10);
-    res.status(statusCode).json();
+    console.log(recommendations);
+    res.status(200).json(recommendations);
 };
 
 const createRecommendation = async (req, res) => {
@@ -104,9 +106,13 @@ const createRecommendation = async (req, res) => {
     if (!userExists) {
         return res.status(404).json({ errors: ['User not found'] });
     }
+
+    try {
         const recommendation = await movieService.createRecommendation(userId, movieId);
-        const statusCode = parseInt(recommendation.split(' ')[0], 10);
-        res.status(statusCode).json();
+        res.status(201).json({ recommendation });
+    } catch (error) {
+        res.status(500).json({ errors: [error.message] });
+    }
 };
 
 // Search movies by query
