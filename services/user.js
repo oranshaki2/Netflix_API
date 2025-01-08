@@ -33,13 +33,11 @@ const getAllUsers = async () => {
     return await User.find({});
 };
 
-// Get a specific IDNumber user by id object
-const getUserIdNumber = async (id) => {
-    const user = await userService.getUserById(id);
-    if (!user) {
-        return res.status(404).json({ errors: ['User not found'] });
+const updateUser = async (user, movieId) => {
+    if (!user.watch_list.includes(movieId)) {
+        user.watch_list.push(movieId); // Add movieId to the list
+        await user.save(); // Save changes to the database
     }
-    return user.idNumber;
 };
 
-module.exports = { createUser, getUserById, getUserByUsername, getUserByEmail, getAllUsers, getUserIdNumber };
+module.exports = { createUser, getUserById, getUserByUsername, getUserByEmail, getAllUsers, updateUser };

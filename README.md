@@ -15,45 +15,99 @@ npm install dotenv
 npm install axios  
 ```
 
-## Running the server using Dockerfile:  
-### Build the Docker Images
-The docker-compose allows running the web server and the recommendation system server.  
+## Running both servers using docker-compose:  
+### Build the Docker Images  
 Use the command:  
   ```bash
    docker-compose build 
   ```
-Start with the web server using the following command:  
+Build the docker for the client:  
   ```bash
-    docker-compose run --name <server_name> web-server <choose_port>
+   docker build -f Dockerfile.client -t client . 
   ```
-For example:
-   ```bash
-    docker-compose run --name ntfx-web-server server 8080
+You can change 'client' as you wish.  
+
+Start and run the multi-container Docker application using the following command:   
+  ```bash
+    docker-compose up
+  ```
+### In a seperate terminal, run the client:
+First, check the name of the network using the following command:  
+  ```bash
+   docker network ls 
+  ```
+Then, run the client:  
+  ```bash
+    docker run -it --network <network_name> client
    ```
-### In a new terminal, run the recommendations system server using the following command:
+For example:  
    ```bash
-    docker-compose run --name <rec_system_server_name> server <server_name> <choose_port>
+    docker run -it --network netflix_api_My-network client
    ```
-For example:
-   ```bash
-    docker-compose run --name ntfx-server server ntfx-web-server 8080
+## Send curl commands:
+If you want to see the output, use -i flag. Here is an example for POST command:  
+  ```bash
+   curl -i -X POST http://web-server:3000/api/users -H "Content-Type: application/json" -d '{
+  "username": "oranshaki",
+  "password": "securePassword123",
+  "email": "oranshaki@gmail.com"
+}'
    ```
-### To stop a running container, use:
+## To view the MongoDB objects (such as databases, collections, and documents) use the following commands:  
+List running containers-
    ```bash
-   docker stop <container_id_or_name>
+    docker ps
    ```
-### To remove a container, use:
+Look for the container running MongoDB and note its CONTAINER ID or NAME.  
+Access the MongoDB container:  
    ```bash
-   docker rm <server_or_client_image_id>
+    docker exec -it <container_name_or_id> bash
+   ```
+Replace <container_name_or_id> with the appropriate value.  
+
+Connect to MongoDB:  
+Inside the container, use the MongoDB shell  
+   ```bash
+    mongosh
+   ```
+Once connected, you can interact with the database:  
+
+List all databases:  
+   ```bash
+    show dbs;
+   ```
+Switch to a specific database:   
+   ```bash
+    use <database_name>;
+   ```
+List collections in the database:  
+   ```bash
+    show collections;
+   ```
+Query documents in a collection:  
+   ```bash
+    db.<collection_name>.find().pretty();
+   ```
+
+### To stop the running servers, use:  
+   ```bash
+   docker-compose down
    ```
 ---
-## Examples of how the project works in action: 
+## Examples of how the project works in action:  
 ### _Login and registration_  
 Add a new user:  
+![image](https://github.com/user-attachments/assets/8bc2a9c9-75d4-43e6-9ed3-eb9a3cc06ed1)  
 
 Get user's details:  
+First, check the user's id (in the _id field).  
+![image](https://github.com/user-attachments/assets/92b61094-fe17-4b70-9d9d-4eb57d9565e8)  
 
-Check if the user exists in the system:  
+Then, send a GET command using this id:  
+![image](https://github.com/user-attachments/assets/c6c624a8-fc67-475e-9403-841213395883)  
+
+Check if a user is registered to the system:  
+
 
 ### _User homepage_  
 ### Categories-  

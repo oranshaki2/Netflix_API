@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const category = require('./movie');
 
 const Schema = mongoose.Schema; 
 
@@ -7,17 +6,13 @@ const Schema = mongoose.Schema;
 const Movie = new Schema({
     name: { // Name of the movie
         type: String, 
-        required: true, 
+        required: true,
         unique: true
     },
-    // userIds: { 
-    //     type: [String], 
-    //     required: true
-    //  },
     idNumber: {
         type: Number,
         required: true,
-        // unique: true,
+        unique: true
     },
 
     categoryIds: {  // Array of category IDs associated with the category.

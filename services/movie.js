@@ -2,9 +2,8 @@ const Category = require('../models/category');
 const Movie = require('../models/movie');
 const User = require('../models/user');
 const axios = require('axios');
-const UserController = require('../controllers/user');
-const MovieController = require('../controllers/movie');
-
+const UserService = require('../services/user');
+const net = require('net');
 
 // Create a new movie
 const createMovie = async (name, categoryIds, idNumber) => {
@@ -50,62 +49,131 @@ const updateMovie = async (id, { name, categoryIds }) => {
 };
 
 // Delete a specific movie by ID
-const deleteMovie = async (id) => {
-    const movie = await Movie.findByIdAndDelete(id);
+const deleteMovie = async (movieId) => {
+    const movie = await Movie.findById(movieId);
     if (movie) {
         // Remove the movie ID from the associated categories
         await Category.updateMany(
-            { movieIds: id },
-            { $pull: { movieIds: id } }
+            { movieIds: movieId },
+            { $pull: { movieIds: movieId } }
         );
+        const users = await User.find({ watch_list: movieId });
+        const movieIdNumber = await getMovieIdNumber(movieId);
+
+        // Iterate over the users and perform your action
+        for (const user of users) {
+            const userIdNumber = await getUserIdNumber(user._id);
+
+            const command = `DELETE ${userIdNumber} ${movieIdNumber}`;
+            // Call the function to send the command via net
+            const response = await sendCommand(command, 'localhost', 8080);
+            await user.watch_list.pull(movieId.toString());
+            await user.save();
+        }
+        await Movie.findByIdAndDelete(movieId);
     }
     return movie;
 };
 
+const getMoviesByIdNumbers = async (idNumbers) => {
+    return Movie.find({ idNumber: { $in: idNumbers } }); // Fetch movies with matching idNumbers
+};
+
 // Define a method that returns movie recommendations for a specific user and movie
 const getRecommendations = async (userId, movieId) => {
-    try {
-        const command = `GET ${userId} ${movieId}`;
-        const response = await axios.post(
-            'https://localhost:8080', // Server URL
-            { command } // Send the formatted string in the request body
-        );
-        console.log(response.data); // Return the response from the server
-    } catch (error) {
-        //console.error('Error sending data:', error.message);
+    const userIdNumber = await getUserIdNumber(userId);
+    const movieIdNumber = await getMovieIdNumber(movieId);
+    const user = await UserService.getUserById(userId);
+
+    const command = `GET ${userIdNumber} ${movieIdNumber}`;
+    // Call the function to send the command via net
+    const response = await sendCommand(command, 'localhost', 8080);
+    if (response.trim().startsWith('200 Ok')) {
+        // Extract data after the first two lines (200 Ok and the blank line)
+        const responseLines = response.split('\n').map(line => line.trim());
+        const idLine = responseLines[2] || ''; // Third line contains IDs (if present)
+
+        // Split the line into individual numbers and parse them
+        const idNumbers = idLine.split(' ').filter(id => id).map(id => {
+            const num = Number(id);
+            if (isNaN(num)) {
+                throw new Error(`Invalid ID received: ${id}`);
+            }
+            return num;
+        });
+        const movieIds = await getMoviesByIdNumbers(idNumbers);
+
+        // Map and return MongoDB _id values
+        const mongoIds = movieIds.map(movie => movie._id.toString());
+        return mongoIds;
     }
+    return response;
 };
 
 // Get a specific IDNumber movie by id object
 const getMovieIdNumber = async (id) => {
-    const movie = await movieService.getMovieById(id);
+    const movie = await Movie.findById(id);
     if (!movie) {
         return res.status(404).json({ errors: ['Movie not found'] });
     }
     return movie.idNumber;
 };
 
-// Define a method that add a movie for a specific user and send it to the recommendation
-//  system
 const createRecommendation = async (userId, movieId) => {
-    try {
-        const userIdNumber = await UserController.getUserIdNumber(userId);
-        const movieIdNumber = await MovieController.getMovieIdNumber(movieId);
-        console.log({ userId, movieId });
-        console.log({ userIdNumber, movieIdNumber });
+    const userIdNumber = await getUserIdNumber(userId);
+    const movieIdNumber = await getMovieIdNumber(movieId);
+    const user = await UserService.getUserById(userId);
+    // If the user has no watch_list, create a new recommendation
+    if (user.watch_list.length === 0) {
         const command = `POST ${userIdNumber} ${movieIdNumber}`;
-        const response = await axios.post(
-            'https://localhost:8080', // Server URL
-            { command } // Send the formatted string in the request body
-        );
-        console.log(response.data); // Return the response from the server
-        if (response.data.includes('200 Ok')) {
-            const user = await User.findById(userId);
-            user.findByIdAndUpdate(userId, { $addToSet: { watch_list: movieId } });
+
+        // Call the function to send the command via net
+        const response = await sendCommand(command, 'localhost', 8080);
+        if (response.trim() === '201 Created') {
+            UserService.updateUser(user, movieId);
         }
-    } catch (error) {
-        //console.error('Error sending data:', error.message);
+        if (response.trim() === '404 Not Found') {
+            const command = `PATCH ${userIdNumber} ${movieIdNumber}`;
+            const response = await sendCommand(command, 'localhost', 8080);
+            if (response.trim() === '204 No Content') {
+                UserService.updateUser(user, movieId);
+            }
+        }
+        return response;
     }
+    // If the user has a watch_list, update the recommendation
+    else {
+        const command = `PATCH ${userIdNumber} ${movieIdNumber}`;
+
+        // Call the function to send the command via net
+        const response = await sendCommand(command, 'localhost', 8080);
+        if (response.trim() === '204 No Content') {
+            UserService.updateUser(user, movieId);
+        }
+        return response;
+    }
+};
+
+const sendCommand = (command, host, port) => {
+    return new Promise((resolve, reject) => {
+        const client = new net.Socket();
+
+        client.connect(port, host, () => {
+            client.write(`${command}\n`);
+        });
+
+        client.on('data', (data) => {
+            resolve(data.toString()); // Resolve the promise with server response
+            client.destroy(); // Close the connection after receiving response
+        });
+
+        client.on('close', () => {
+        });
+
+        client.on('error', (err) => {
+            reject(new Error(`Connection error: ${err.message}`)); // Reject the promise on error
+        });
+    });
 };
 
 // Search movies by query
@@ -141,10 +209,8 @@ const getMoviesByCategories = async (userId) => {
             });
         }
     }
-
-    const watchedMovies = await Movie.find({
-        _id: { $in: user.watch_list }
-    }).limit(20);
+    const watchedMoviesList = user.watch_list || [];
+    const watchedMovies = watchedMoviesList.slice(-20);
 
     moviesByCategories.push({
         category: 'Watched Movies',
@@ -154,4 +220,13 @@ const getMoviesByCategories = async (userId) => {
     return moviesByCategories;
 };
 
-module.exports = { createMovie, getMovies, getMovieById, updateMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie, getMoviesByCategories, getMovieIdNumber };
+// Get a specific IDNumber user by id object
+const getUserIdNumber = async (id) => {
+    const user = await UserService.getUserById(id);
+    if (!user) {
+        return res.status(404).json({ errors: ['User not found'] });
+    }
+    return user.idNumber;
+};
+
+module.exports = { createMovie, getMovies, getMovieById, updateMovie, deleteMovie, getRecommendations, createRecommendation, searchMovie, getMoviesByCategories, getMovieIdNumber, getUserIdNumber };
