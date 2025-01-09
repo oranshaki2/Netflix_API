@@ -89,9 +89,14 @@ const deleteMovie = async (req, res) => {
 const getRecommendations = async (req, res) => {
     const userId = req.headers['x-user-id'];
     const movieId = req.params.id;
-
+    if (!userId) {
+        return res.status(400).json({ errors: ['User ID is required'] });
+    }
+    const existingUser = await userService.getUserById(userId);
+    if (!existingUser) {
+        return res.status(404).json({ errors: ['User ID not exsit'] });
+    }
     const recommendations = await movieService.getRecommendations(userId, movieId);
-    console.log(recommendations);
     res.status(200).json(recommendations);
 };
 
@@ -107,12 +112,9 @@ const createRecommendation = async (req, res) => {
         return res.status(404).json({ errors: ['User not found'] });
     }
 
-    try {
         const recommendation = await movieService.createRecommendation(userId, movieId);
-        res.status(201).json({ recommendation });
-    } catch (error) {
-        res.status(500).json({ errors: [error.message] });
-    }
+        const statusCode = parseInt(recommendation.split(' ')[0], 10);
+        res.status(statusCode).json();
 };
 
 // Search movies by query
