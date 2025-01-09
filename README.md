@@ -12,7 +12,6 @@ npm install express
 npm install cors  
 npm install mongoose  
 npm install dotenv  
-npm install axios  
 ```
 
 ## Running both servers using docker-compose:  
