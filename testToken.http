@@ -1,5 +1,6 @@
-### Check of right username and password
-POST http://localhost:3000/api/tokens
+### Create a new user
+### I changed localhost to be web-server because of the Dockerfile
+POST http://web-server:3000/api/token
 Content-Type: application/json
 
 {
