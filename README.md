@@ -178,9 +178,10 @@ Add a new movie:
 
 ![תמונה של WhatsApp‏ 2025-01-09 בשעה 10 46 55_2ac71458](https://github.com/user-attachments/assets/03f5c127-2686-448c-b9dd-e4535937f177)
 
+
 Trying to add the same movie again:  
 
-![image](https://github.com/user-attachments/assets/820d6044-559d-4f25-8ee7-618b573865e7)
+![image](https://github.com/user-attachments/assets/0f398d6b-682c-49c4-a0ce-04614cc5be05)
 
 
 Show details of a specific movie:  
