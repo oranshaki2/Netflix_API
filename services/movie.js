@@ -138,6 +138,7 @@ const createRecommendation = async (userId, movieId) => {
             if (response.trim() === '204 No Content') {
                 UserService.updateUser(user, movieId);
             }
+            return response;
         }
         return response;
     }

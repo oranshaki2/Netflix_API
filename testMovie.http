@@ -98,6 +98,6 @@ Content-Type: application/json
 X-User-Id: 677d936c6d6d9e1c2a9fa743
 
 ### GET Request to CPP server
-POST http://localhost:3000/api/movies/677d91a598702e692043f361/recommend
+POST http://localhost:3000/api/movies/677fa3f9489c1fcf82af78c5/recommend
 Content-Type: application/json
-X-User-Id: 677d9477cb5eaf9fcf337a78
+X-User-Id: 677f7f7a489c1fcf82af78a8
