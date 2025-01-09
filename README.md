@@ -155,7 +155,7 @@ And using GET command, see how "Disney" is no longer available:
 
 Get a list of 20 available movies arranged by promoted categories,  
 and also the last (at most) 20 movies the user watched:  
-In this example, we created 24 movies, and the user watched 3 of them.  
+In the first example, we created 24 movies, and the user watched 3 of them.  
 
 ![תמונה של WhatsApp‏ 2025-01-09 בשעה 13 00 21_09619726](https://github.com/user-attachments/assets/cdb05682-9566-461a-b0b4-5db6f389a856)
 ![תמונה של WhatsApp‏ 2025-01-09 בשעה 13 01 00_8a824c28](https://github.com/user-attachments/assets/416175b3-4c05-44eb-9fed-c76de0c8ae26)
@@ -165,6 +165,13 @@ In this example, we created 24 movies, and the user watched 3 of them.
 ![תמונה של WhatsApp‏ 2025-01-09 בשעה 13 02 41_015f0f37](https://github.com/user-attachments/assets/d62763e2-4525-4eeb-85f4-6494b0595d41)
 ![תמונה של WhatsApp‏ 2025-01-09 בשעה 13 03 00_f613914c](https://github.com/user-attachments/assets/c5f112b8-b9ee-4151-b7df-5d22ec72e494)
 ![תמונה של WhatsApp‏ 2025-01-09 בשעה 13 03 17_fb0248a4](https://github.com/user-attachments/assets/df5074de-e0cf-45d3-8364-a0f932a487e9)
+
+In the seccond example, the user watched 21 movies and we get only 20 as reqired.  
+
+![תמונה של WhatsApp‏ 2025-01-09 בשעה 14 41 47_b638cdca](https://github.com/user-attachments/assets/91e776cb-5ae3-48ee-8d49-08880d2ccd6c)
+
+![תמונה של WhatsApp‏ 2025-01-09 בשעה 14 39 42_e20a0b1e](https://github.com/user-attachments/assets/9cf89780-bd02-45b8-93e6-4aa151620d58)
+![תמונה של WhatsApp‏ 2025-01-09 בשעה 14 40 02_068c61c7](https://github.com/user-attachments/assets/087fd02d-b7f4-417d-9250-b694f01a4fa0)
 
 
 Add a new movie:  
@@ -215,6 +222,22 @@ Search for a movie by using keywords:
 
 ### Recommendations-  
 
-Displays movie recommendations for the current user based on a specific movie:  
+Update the recommendation system that the current user watched a specific movie:  
 
-Update the recommendation system that the current user watched a specific movie: 
+For a new user-  
+
+![תמונה של WhatsApp‏ 2025-01-09 בשעה 18 54 17_c88089c3](https://github.com/user-attachments/assets/7f8cac6a-bf77-41ba-84b5-b32fb2d00544)
+
+For an existing user-  
+
+![תמונה של WhatsApp‏ 2025-01-09 בשעה 18 55 18_451784c3](https://github.com/user-attachments/assets/16f8999e-b4fc-43c1-b419-b786a5c15744)
+
+
+Get movie recommendations for the current user based on a specific movie:  
+
+![תמונה של WhatsApp‏ 2025-01-09 בשעה 18 56 00_ecd8b831](https://github.com/user-attachments/assets/0af0e7be-577a-4e09-a316-ad71c3e81096)
+
+
+Indeed, movie number 3 was added to user ID 2, followed by movie number 5.  
+
+![תמונה של WhatsApp‏ 2025-01-09 בשעה 18 56 26_099c5817](https://github.com/user-attachments/assets/25381b4e-d57a-4c24-8642-72ae5a5941e3)
