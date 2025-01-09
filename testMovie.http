@@ -34,7 +34,6 @@ X-User-Id: 677a3535ff2c327b25afe4c9
 
 ### GET Request to fetch a specific movie by ID
 GET http://localhost:3000/api/movies/677a2f5bae01f686add8fc7d
-X-User-Id: 12345
 
 ### PUT Request to update a specific movie by ID
 PUT http://localhost:3000/api/movies/677a65a0039ba77bc1d2e7e3
