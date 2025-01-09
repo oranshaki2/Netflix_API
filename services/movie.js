@@ -66,7 +66,7 @@ const deleteMovie = async (movieId) => {
 
             const command = `DELETE ${userIdNumber} ${movieIdNumber}`;
             // Call the function to send the command via net
-            const response = await sendCommand(command, 'localhost', 8080);
+            const response = await sendCommand(command, 'recommendation-server', 8080);
             await user.watch_list.pull(movieId.toString());
             await user.save();
         }
@@ -87,7 +87,7 @@ const getRecommendations = async (userId, movieId) => {
 
     const command = `GET ${userIdNumber} ${movieIdNumber}`;
     // Call the function to send the command via net
-    const response = await sendCommand(command, 'web-server', 8080);
+    const response = await sendCommand(command, 'recommendation-server', 8080);
     if (response.trim().startsWith('200 Ok')) {
         // Extract data after the first two lines (200 Ok and the blank line)
         const responseLines = response.split('\n').map(line => line.trim());
@@ -128,13 +128,13 @@ const createRecommendation = async (userId, movieId) => {
         const command = `POST ${userIdNumber} ${movieIdNumber}`;
 
         // Call the function to send the command via net
-        const response = await sendCommand(command, 'web-server', 8080);
+        const response = await sendCommand(command, 'recommendation-server', 8080);
         if (response.trim() === '201 Created') {
             UserService.updateUser(user, movieId);
         }
         if (response.trim() === '404 Not Found') {
             const command = `PATCH ${userIdNumber} ${movieIdNumber}`;
-            const response = await sendCommand(command, 'localhost', 8080);
+            const response = await sendCommand(command, 'recommendation-server', 8080);
             if (response.trim() === '204 No Content') {
                 UserService.updateUser(user, movieId);
             }
@@ -147,7 +147,7 @@ const createRecommendation = async (userId, movieId) => {
         const command = `PATCH ${userIdNumber} ${movieIdNumber}`;
 
         // Call the function to send the command via net
-        const response = await sendCommand(command, 'localhost', 8080);
+        const response = await sendCommand(command, 'recommendation-server', 8080);
         if (response.trim() === '204 No Content') {
             UserService.updateUser(user, movieId);
         }
