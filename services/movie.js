@@ -200,7 +200,7 @@ const getMoviesByCategories = async (userId) => {
         if (category.promoted.includes(userId)) {
             const movies = await Movie.find({
                 _id: { $nin: user.watch_list },
-                categoryIds: category._id
+                categoryIds: { $regex: category._id, $options: 'i' }
             }).limit(20);
 
             moviesByCategories.push({
