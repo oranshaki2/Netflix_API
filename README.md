@@ -155,6 +155,7 @@ And using GET command, see how "Disney" is no longer available:
 
 Get a list of 20 available movies arranged by promoted categories,  
 and also the last (at most) 20 movies the user watched:  
+In this example, we created 24 movies, and the user watched 3 of them.  
 
 ![תמונה של WhatsApp‏ 2025-01-09 בשעה 13 00 21_09619726](https://github.com/user-attachments/assets/cdb05682-9566-461a-b0b4-5db6f389a856)
 ![תמונה של WhatsApp‏ 2025-01-09 בשעה 13 01 00_8a824c28](https://github.com/user-attachments/assets/416175b3-4c05-44eb-9fed-c76de0c8ae26)
